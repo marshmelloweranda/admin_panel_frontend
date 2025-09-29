@@ -1,12 +1,12 @@
 import logo from './logo.svg';
 import './App.css';
-import AdminPanel from './AdminPanel';
+import ApplicationsAdmin from './ApplicationsAdmin';
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-         <AdminPanel />
+         <ApplicationsAdmin />
       </header>
     </div>
   );
