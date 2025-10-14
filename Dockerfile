@@ -1,25 +1,29 @@
-FROM node:20-alpine AS builder
+FROM node:18-alpine
 
+# Set working directory
 WORKDIR /app
 
-COPY package.json ./
-COPY package-lock.json ./
+# Copy package files
+COPY package*.json ./
 
-RUN npm install
+# Install dependencies (clean cache for smaller image)
+RUN npm install && npm cache clean --force
 
+# Copy source code
 COPY . .
 
-RUN npm run build
+# Build the application
+RUN PUBLIC_URL=/admin npm run build
 
-# --- stage 2
+# Install serve globally
+RUN npm install -g serve
 
-
-FROM nginx:alpine AS production
-
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-
-COPY --from=builder /app/build /usr/share/nginx/html
-
+# Expose port
 EXPOSE 3008
 
-CMD ["nginx", "-g", "daemon off;"]
+# Health check (optional but recommended)
+HEALTHCHECK --interval=30s --timeout=3s \
+  CMD wget --no-verbose --tries=1 --spider http://localhost:3008/ || exit 1
+
+# Start the application
+CMD ["serve", "-s", "build", "-l", "3008"]
