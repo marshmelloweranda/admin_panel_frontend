@@ -3,7 +3,7 @@ import React, { useState, useEffect, useCallback, useMemo } from 'react';
 // Set up for Tailwind CSS and Inter font (assumed to be loaded in the environment)
 
 // --- API Utility Functions ---
-const API_BASE_URL = 'http://dmt.digieconcenter.gov.lk/admin/aapi'; 
+const API_BASE_URL = 'https://dmt.digieconcenter.gov.lk/aapi'; 
 const DEBOUNCE_DELAY = 300; 
 
 /**
