@@ -43,7 +43,7 @@ export const apiFetcher = async (url, options = {}, retries = 3) => {
     }
 };
 
-const API_BASE_URL = 'http://localhost:5002/aapi'
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 /**
  * API service object for application management.
  */
