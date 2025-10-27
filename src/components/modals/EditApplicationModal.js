@@ -101,6 +101,26 @@ const EditApplicationModal = ({ application, onClose, onSave, loading }) => {
                         <div className="flex-1 overflow-y-auto">
                             <div className="p-6 space-y-6">
                                 
+                                {/* Applicant Photo Section */}
+                                {application.photo_url && (
+                                    <div className="bg-gray-50 p-5 rounded-xl border border-gray-200">
+                                        <h3 className="text-xl font-semibold text-gray-700 mb-4 border-b pb-2">Applicant Photo</h3>
+                                        <div className="flex justify-center">
+                                            <div className="w-32 h-32 rounded-lg overflow-hidden border-2 border-gray-300">
+                                                <img 
+                                                    src={application.photo_url} 
+                                                    alt="Applicant" 
+                                                    className="w-full h-full object-cover"
+                                                    onError={(e) => {
+                                                        e.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik05NiA3MCMxMTEuNDY2IDcwIDEyNCA4Mi41MzQ0IDEyNCA5OEMxMjQgMTEzLjQ2NiAxMTEuNDY2IDEyNiA5NiAxMjZDODAuNTM0NCAxMjYgNjggMTEzLjQ2NiA2OCA5OEM2OCA4Mi41MzQ0IDgwLjUzNDQgNzAgOTYgNzBaTTk2IDE0MEMxMjMuMTk2IDE0MCAxNDYgMTU0LjY2NyAxNDYgMTcySDUwQzUwIDE1NC42NjcgNzIuODA0IDE0MCA5NiAxNDBaIiBmaWxsPSIjOEM5M0FCIi8+Cjwvc3ZnPgo=';
+                                                    }}
+                                                />
+                                            </div>
+                                        </div>
+                                        <p className="text-center text-sm text-gray-500 mt-2">Photo (View Only)</p>
+                                    </div>
+                                )}
+
                                 {/* Status and Admin Control Section */}
                                 <div className="bg-gray-50 p-5 rounded-xl border border-gray-200">
                                     <h3 className="text-xl font-semibold text-indigo-700 mb-4 border-b pb-2">Status & Admin Control</h3>
