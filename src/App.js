@@ -1,4 +1,6 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
+import ApplicationsAdmin from './components/applications/ApplicationsAdmin';
+import LoginComponent from './components/common/LoginComponent';
 
 // Set up for Tailwind CSS and Inter font (assumed to be loaded in the environment)
 
@@ -804,7 +806,6 @@ const LoginComponent = ({ onLogin }) => {
 const App = () => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     
-    // Simulate checking session/token on load
     useEffect(() => {
         const storedAuth = sessionStorage.getItem('dmt-auth');
         if (storedAuth === 'true') {
@@ -826,7 +827,6 @@ const App = () => {
         <div className="font-sans antialiased min-h-screen">
             {isAuthenticated ? (
                 <>
-                    {/* Header is full width */}
                     <header className="bg-white shadow-lg fixed w-full z-20">
                         <div className="py-4 px-4 sm:px-6 lg:px-8 flex justify-between items-center w-full">
                             <h1 className="text-xl font-bold text-gray-900">
@@ -840,8 +840,8 @@ const App = () => {
                             </button>
                         </div>
                     </header>
-                    <main className="pt-20"> {/* Padding to account for fixed header */}
-                        <ApplicationsAdmin api={api} />
+                    <main className="pt-20">
+                        <ApplicationsAdmin />
                     </main>
                 </>
             ) : (
@@ -852,11 +852,3 @@ const App = () => {
 };
 
 export default App;
-
-// Custom utility classes to ensure black text and consistent styling
-// These are not separate files, just utility classes defined conceptually here for clarity.
-/*
-.form-input {
-    @apply w-full px-3 py-2 border border-gray-300 rounded-lg text-gray-900 focus:ring-indigo-500 focus:border-indigo-500 transition;
-}
-*/
