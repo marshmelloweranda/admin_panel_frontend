@@ -2,72 +2,52 @@ import React, { useState, useEffect } from 'react';
 import ApplicationsAdmin from './components/applications/ApplicationsAdmin';
 import LoginComponent from './components/common/LoginComponent';
 
-// Set up for Tailwind CSS and Inter font (assumed to be loaded in the environment)
-
-// --- API Utility Functions ---
-const API_BASE_URL = 'https://dmt.digieconcenter.gov.lk/aapi'; 
-const DEBOUNCE_DELAY = 300; 
-
-/**
- * Generic API fetcher that handles JSON parsing and error checking.
- * Implements exponential backoff for robustness.
- */
-export const apiFetcher = async (url, options = {}, retries = 3) => {
-    for (let i = 0; i < retries; i++) {
-        try {
-            const response = await fetch(url, options);
-            
-            // Check if response is OK before trying to parse JSON
-            if (!response.ok) {
-                // Try to get error message from response
-                let errorMsg;
-                try {
-                    const errorData = await response.json();
-                    errorMsg = errorData.message || errorData.error || `HTTP error! status: ${response.status}`;
-                } catch (e) {
-                    errorMsg = `HTTP error! status: ${response.status}`;
-                }
-                throw new Error(errorMsg);
-            }
-
-            // Parse JSON only for successful responses
-            let data;
-            try {
-                data = await response.json();
-            } catch (e) {
-                // If no JSON content, return empty object
-                data = {};
-            }
-
-            return data;
-        } catch (error) {
-            if (i < retries - 1) {
-                const delay = Math.pow(2, i) * 1000;
-                await new Promise(resolve => setTimeout(resolve, delay));
-            } else {
-                throw new Error(`API Request Failed after ${retries} attempts: ${error.message}`);
-            }
+const App = () => {
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    
+    useEffect(() => {
+        const storedAuth = sessionStorage.getItem('dmt-auth');
+        if (storedAuth === 'true') {
+            setIsAuthenticated(true);
         }
-    }
+    }, []);
+
+    const handleLogin = () => {
+        setIsAuthenticated(true);
+        sessionStorage.setItem('dmt-auth', 'true');
+    };
+
+    const handleLogout = () => {
+        setIsAuthenticated(false);
+        sessionStorage.removeItem('dmt-auth');
+    };
+
+    return (
+        <div className="font-sans antialiased min-h-screen">
+            {isAuthenticated ? (
+                <>
+                    <header className="bg-white shadow-lg fixed w-full z-20">
+                        <div className="py-4 px-4 sm:px-6 lg:px-8 flex justify-between items-center w-full">
+                            <h1 className="text-xl font-bold text-gray-900">
+                                Department of Motor Traffic - Admin Panel
+                            </h1>
+                            <button
+                                onClick={handleLogout}
+                                className="px-4 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition duration-150 ease-in-out"
+                            >
+                                Sign Out
+                            </button>
+                        </div>
+                    </header>
+                    <main className="pt-20">
+                        <ApplicationsAdmin />
+                    </main>
+                </>
+            ) : (
+                <LoginComponent onLogin={handleLogin} />
+            )}
+        </div>
+    );
 };
-/**
- * API service object for application management.
- */
-export const api = {
-    get: (path, params = {}) => {
-        const url = new URL(`${API_BASE_URL}${path}`);
-        // Add query parameters
-        Object.keys(params).forEach(key => {
-            if (params[key] !== '' && params[key] !== undefined) url.searchParams.append(key, params[key]);
-        });
-        return apiFetcher(url.toString());
-    },
-    put: (path, body) => apiFetcher(`${API_BASE_URL}${path}`, {
-        method: 'PUT',
-        headers: { 
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-        },
-        body: JSON.stringify(body),
-    }),
-};
+
+export default App;
